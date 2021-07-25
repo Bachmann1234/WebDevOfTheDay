@@ -1,0 +1,44 @@
+{
+  "name": "webdevoftheday",
+  "version": "1.0.0",
+  "description": "A bot to tweet resources from the MDN",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bachmann1234/WebDevOfTheDay.git"
+  },
+  "author": "Matt Bachmann",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Bachmann1234/WebDevOfTheDay/issues"
+  },
+  "homepage": "https://github.com/Bachmann1234/WebDevOfTheDay#readme",
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.2",
+    "@types/jest": "^26.0.24",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.4",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/cheerio": "^0.22.30",
+    "@types/node": "^16.4.2",
+    "@types/pino": "^6.3.9",
+    "@types/twit": "^2.2.30",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.10",
+    "pino": "^6.13.0",
+    "twit": "^2.2.11"
+  }
+}
