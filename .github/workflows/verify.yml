@@ -1,0 +1,24 @@
+name: PR Job
+on: [push]
+jobs:
+    verify:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+            - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+            - name: Check out repository code
+              uses: actions/checkout@v2
+            - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: '16'
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+            - run: npm ci
+            - run: npm lint-ci
+            - run: npm test
+            - run: echo "🍏 This job's status is ${{ job.status }}."
