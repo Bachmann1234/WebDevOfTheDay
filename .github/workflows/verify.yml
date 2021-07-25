@@ -19,6 +19,6 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-node-
             - run: npm ci
-            - run: npm lint-ci
+            - run: npm run lint-ci
             - run: npm test
             - run: echo "🍏 This job's status is ${{ job.status }}."
