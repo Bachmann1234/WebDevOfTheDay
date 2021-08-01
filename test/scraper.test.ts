@@ -46,7 +46,10 @@ test('Can make element from CSS page', async () => {
 
 test('Can turn a concept into a tweet', () => {
     expect(
-        conceptToTweet({ name: 'test', description: 'One cool tweet', link: 'example.com/twentythree' }, '#Cool #Tweet'),
+        conceptToTweet(
+            { name: 'test', description: 'One cool tweet', link: 'example.com/twentythree' },
+            '#Cool #Tweet',
+        ),
     ).toStrictEqual('test - One cool tweet example.com/twentythree #Cool #Tweet');
 });
 
