@@ -3,7 +3,7 @@ import cheerio from 'cheerio';
 
 interface Concept {
     name: string;
-    description?: string;
+    description: string;
     link: string;
 }
 
@@ -33,7 +33,7 @@ export async function getHtmlElements(): Promise<Array<Concept>> {
         });
 }
 
-export async function getCssElements(): Promise<Array<Concept>> {
+export async function getCssElements(): Promise<string[]> {
     const response = await axios.get(CSS_INDEX_URL);
     if (response.status !== 200) {
         throw new Error('Failed to load index page');
@@ -42,12 +42,9 @@ export async function getCssElements(): Promise<Array<Concept>> {
     return $('div.index a')
         .toArray()
         .map((elem) => {
-            return {
-                name: $(elem).text().trim(),
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                link: `${MDN_US_HOME}${elem.attribs.href}`,
-            };
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return `${MDN_US_HOME}${elem.attribs.href}`;
         });
 }
 
@@ -62,4 +59,18 @@ export async function elementFromUrl(url: string): Promise<Concept> {
         description: $($('article div').toArray()[0]).text().trim().replaceAll(String.fromCharCode(160), ' '),
         link: url,
     };
+}
+
+export function conceptToTweet(concept: Concept, hashtags: string): string {
+    // all urls are shortened to 23 chars
+    const urlLength = 23; // https://help.twitter.com/en/using-twitter/how-to-tweet-a-link
+    const hashTagLength = hashtags.length;
+    const remainingLength = 280 - urlLength - hashTagLength - concept.name.length - 5;
+    if (concept.description.length <= remainingLength) {
+        return `${concept.name} - ${concept.description} ${concept.link} ${hashtags}`;
+    } else {
+        return `${concept.name} - ${concept.description.substring(0, remainingLength - 3)}... ${
+            concept.link
+        } ${hashtags}`;
+    }
 }
