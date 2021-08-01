@@ -3,12 +3,13 @@ import cheerio from 'cheerio';
 
 interface Concept {
     name: string;
-    description: string;
+    description?: string;
     link: string;
 }
 
 export const MDN_US_HOME = 'https://developer.mozilla.org';
 export const HTML_INDEX_URL = `${MDN_US_HOME}/en-US/docs/Web/HTML/Element`;
+export const CSS_INDEX_URL = `${MDN_US_HOME}/en-US/docs/Web/HTML/Element`;
 
 export async function getHtmlElements(): Promise<Array<Concept>> {
     const response = await axios.get(HTML_INDEX_URL);
@@ -21,8 +22,8 @@ export async function getHtmlElements(): Promise<Array<Concept>> {
         .map((elem) => {
             const firstAnchor = $(elem).find('a')[0];
             return {
-                name: $(firstAnchor).text(),
-                description: $($(elem).find('td')[1]).text(),
+                name: $(firstAnchor).text().trim(),
+                description: $($(elem).find('td')[1]).text().trim(),
                 // I am not sure why the types say this prop does not exist
                 // It really seems to exist...
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -30,4 +31,35 @@ export async function getHtmlElements(): Promise<Array<Concept>> {
                 link: `${MDN_US_HOME}${firstAnchor.attribs.href}`,
             };
         });
+}
+
+export async function getCssElements(): Promise<Array<Concept>> {
+    const response = await axios.get(CSS_INDEX_URL);
+    if (response.status !== 200) {
+        throw new Error('Failed to load index page');
+    }
+    const $ = cheerio.load(response.data);
+    return $('div.index a')
+        .toArray()
+        .map((elem) => {
+            return {
+                name: $(elem).text().trim(),
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                link: `${MDN_US_HOME}${elem.attribs.href}`,
+            };
+        });
+}
+
+export async function elementFromUrl(url: string): Promise<Concept> {
+    const response = await axios.get(url);
+    if (response.status !== 200) {
+        throw new Error('Failed to load detail page');
+    }
+    const $ = cheerio.load(response.data);
+    return {
+        name: $('article h1').text().trim(),
+        description: $($('article div').toArray()[0]).text().trim().replaceAll(String.fromCharCode(160), ' '),
+        link: url,
+    };
 }
