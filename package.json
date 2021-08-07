@@ -8,7 +8,9 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "lint-ci": "eslint '*/**/*.{js,ts,tsx}'",
     "clean": "rm -r node_modules; rm -r dist",
-    "build": "tsc"
+    "build": "tsc",
+    "tweetHTML": "node ./dist/tweet.js html",
+    "tweetCSS": "node ./dist/tweet.js css"
   },
   "repository": {
     "type": "git",

@@ -29,7 +29,7 @@ function isSuccessfulTwitterResponse(value: unknown): value is SuccessfulTwitter
     return false;
 }
 
-export function handleTwitterResponse(
+function handleTwitterResponse(
     err: Error | null,
     result: Response,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,14 +75,34 @@ function getDay(): number {
     return Math.floor(diff / oneDay);
 }
 
-export async function tweetHTMLConcept(): Promise<void> {
+async function tweetHTMLConcept(): Promise<void> {
     const concepts = await getHtmlElements();
     const todaysConcept = concepts[getDay() % concepts.length];
     await tweetConcept(todaysConcept, '#webdev #html');
 }
-export async function tweetCSSConcept(): Promise<void> {
+async function tweetCSSConcept(): Promise<void> {
     const cssUrls = await getCssElements();
     const todaysUrl = cssUrls[getDay() % cssUrls.length];
     const todaysConcept = await elementFromUrl(todaysUrl);
     await tweetConcept(todaysConcept, '#webdev #css');
+}
+
+function doTweet(tweetType: string, fn: () => Promise<void>): void {
+    fn()
+        .catch((error) => {
+            console.log(`Failed to tweet ${tweetType} concept`);
+            console.log(error);
+        })
+        .then(() => console.log(`${tweetType} tweet made!`));
+}
+
+if (require.main === module) {
+    const concept = process.argv.slice(2)[0];
+    if (concept === 'html') {
+        doTweet(concept, tweetHTMLConcept);
+    } else if (concept === 'css') {
+        doTweet(concept, tweetCSSConcept);
+    } else {
+        console.log(`Unknown concept ${concept}`);
+    }
 }
