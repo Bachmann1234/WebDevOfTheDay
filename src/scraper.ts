@@ -1,7 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-interface Concept {
+export interface Concept {
     name: string;
     description: string;
     link: string;
@@ -59,18 +59,4 @@ export async function elementFromUrl(url: string): Promise<Concept> {
         description: $($('article div').toArray()[0]).text().trim().replaceAll(String.fromCharCode(160), ' '),
         link: url,
     };
-}
-
-export function conceptToTweet(concept: Concept, hashtags: string): string {
-    // all urls are shortened to 23 chars
-    const urlLength = 23; // https://help.twitter.com/en/using-twitter/how-to-tweet-a-link
-    const hashTagLength = hashtags.length;
-    const remainingLength = 280 - urlLength - hashTagLength - concept.name.length - 5;
-    if (concept.description.length <= remainingLength) {
-        return `${concept.name} - ${concept.description} ${concept.link} ${hashtags}`;
-    } else {
-        return `${concept.name} - ${concept.description.substring(0, remainingLength - 3)}... ${
-            concept.link
-        } ${hashtags}`;
-    }
 }
