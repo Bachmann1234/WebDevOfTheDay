@@ -46,6 +46,8 @@ function handleTwitterResponse(
 }
 
 async function tweetConcept(concept: Concept, hashtags: string): Promise<void> {
+    const tweet = conceptToTweet(concept, hashtags);
+    console.log(`Tweeting: ${tweet}`);
     if (
         !(
             process.env.TWITTER_API_KEY &&
@@ -64,7 +66,7 @@ async function tweetConcept(concept: Concept, hashtags: string): Promise<void> {
         timeout_ms: 1000 * 60,
         strictSSL: true,
     });
-    twit.post('statuses/update', { status: conceptToTweet(concept, hashtags) }, handleTwitterResponse);
+    twit.post('statuses/update', { status: tweet }, handleTwitterResponse);
 }
 
 function getDay(): number {
@@ -89,11 +91,11 @@ async function tweetCSSConcept(): Promise<void> {
 
 function doTweet(tweetType: string, fn: () => Promise<void>): void {
     fn()
+        .then(() => console.log(`${tweetType} tweet made!`))
         .catch((error) => {
             console.log(`Failed to tweet ${tweetType} concept`);
             console.log(error);
-        })
-        .then(() => console.log(`${tweetType} tweet made!`));
+        });
 }
 
 if (require.main === module) {

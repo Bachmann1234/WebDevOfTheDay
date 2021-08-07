@@ -9,7 +9,7 @@ export interface Concept {
 
 export const MDN_US_HOME = 'https://developer.mozilla.org';
 export const HTML_INDEX_URL = `${MDN_US_HOME}/en-US/docs/Web/HTML/Element`;
-export const CSS_INDEX_URL = `${MDN_US_HOME}/en-US/docs/Web/HTML/Element`;
+export const CSS_INDEX_URL = `${MDN_US_HOME}/en-US/docs/Web/CSS/Reference`;
 
 export async function getHtmlElements(): Promise<Array<Concept>> {
     const response = await axios.get(HTML_INDEX_URL);
