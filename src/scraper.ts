@@ -49,6 +49,7 @@ export async function getCssElements(): Promise<string[]> {
 }
 
 export async function elementFromUrl(url: string): Promise<Concept> {
+    console.log(`Loading element from ${url}`);
     const response = await axios.get(url);
     if (response.status !== 200) {
         throw new Error('Failed to load detail page');
