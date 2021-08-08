@@ -69,22 +69,26 @@ async function tweetConcept(concept: Concept, hashtags: string): Promise<void> {
     twit.post('statuses/update', { status: tweet }, handleTwitterResponse);
 }
 
-function getDay(): number {
+function getDaysSinceBotEpoc(): number {
+    // Using the start of 2021 as a sort of epoc. count days starting forward as a counter
+    // to loop though concepts
     const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
+    const start = new Date(2021, 0, 0);
     const diff = now.valueOf() - start.valueOf() + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
     const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay) + 1;
+    return Math.floor(diff / oneDay);
 }
 
 async function tweetHTMLConcept(): Promise<void> {
     const concepts = await getHtmlElements();
-    const todaysConcept = concepts[getDay() % concepts.length];
+    console.log(concepts.length);
+    const todaysConcept = concepts[getDaysSinceBotEpoc() % concepts.length];
     await tweetConcept(todaysConcept, '#webdev #html');
 }
 async function tweetCSSConcept(): Promise<void> {
     const cssUrls = await getCssElements();
-    const todaysUrl = cssUrls[getDay() % cssUrls.length];
+    console.log(cssUrls.length);
+    const todaysUrl = cssUrls[getDaysSinceBotEpoc() % cssUrls.length];
     const todaysConcept = await elementFromUrl(todaysUrl);
     await tweetConcept(todaysConcept, '#webdev #css');
 }
