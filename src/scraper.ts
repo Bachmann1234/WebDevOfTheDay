@@ -27,7 +27,12 @@ export async function getHtmlElements(): Promise<Array<Concept>> {
             const firstAnchor = $(elem).find('a')[0];
             return {
                 name: replaceTwitterCharacterInName($(firstAnchor).text().trim()),
-                description: $($(elem).find('td')[1]).text().trim(),
+                description: $($(elem).find('td')[1])
+                    .text()
+                    .trim()
+                    .split(' ')
+                    .map(replaceTwitterCharacterInName)
+                    .join(' '),
                 // I am not sure why the types say this prop does not exist
                 // It really seems to exist...
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -61,7 +66,13 @@ export async function elementFromUrl(url: string): Promise<Concept> {
     const $ = cheerio.load(response.data);
     return {
         name: replaceTwitterCharacterInName($('article h1').text().trim()),
-        description: $($('article div').toArray()[0]).text().trim().replaceAll(String.fromCharCode(160), ' '),
+        description: $($('article div').toArray()[0])
+            .text()
+            .trim()
+            .replaceAll(String.fromCharCode(160), ' ')
+            .split(' ')
+            .map(replaceTwitterCharacterInName)
+            .join(' '),
         link: url,
     };
 }

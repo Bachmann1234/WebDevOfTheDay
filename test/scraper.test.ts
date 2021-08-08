@@ -31,7 +31,7 @@ test('Can make element from CSS page', async () => {
     const expected = {
         name: 'font-variant',
         description:
-            'The font-variant CSS shorthand property allows you to set all the font variants for the fonts specified in the @font-face rule.',
+            'The font-variant CSS shorthand property allows you to set all the font variants for the fonts specified in the font-face rule.',
         link: url,
     };
     expect(result).toStrictEqual(expected);
