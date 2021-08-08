@@ -11,6 +11,10 @@ export const MDN_US_HOME = 'https://developer.mozilla.org';
 export const HTML_INDEX_URL = `${MDN_US_HOME}/en-US/docs/Web/HTML/Element`;
 export const CSS_INDEX_URL = `${MDN_US_HOME}/en-US/docs/Web/CSS/Reference`;
 
+export function replaceTwitterCharacterInName(name: string): string {
+    return name.startsWith('#') || name.startsWith('@') ? name.substring(1) : name;
+}
+
 export async function getHtmlElements(): Promise<Array<Concept>> {
     const response = await axios.get(HTML_INDEX_URL);
     if (response.status !== 200) {
@@ -22,7 +26,7 @@ export async function getHtmlElements(): Promise<Array<Concept>> {
         .map((elem) => {
             const firstAnchor = $(elem).find('a')[0];
             return {
-                name: $(firstAnchor).text().trim(),
+                name: replaceTwitterCharacterInName($(firstAnchor).text().trim()),
                 description: $($(elem).find('td')[1]).text().trim(),
                 // I am not sure why the types say this prop does not exist
                 // It really seems to exist...
@@ -56,7 +60,7 @@ export async function elementFromUrl(url: string): Promise<Concept> {
     }
     const $ = cheerio.load(response.data);
     return {
-        name: $('article h1').text().trim(),
+        name: replaceTwitterCharacterInName($('article h1').text().trim()),
         description: $($('article div').toArray()[0]).text().trim().replaceAll(String.fromCharCode(160), ' '),
         link: url,
     };

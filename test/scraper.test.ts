@@ -36,3 +36,10 @@ test('Can make element from CSS page', async () => {
     };
     expect(result).toStrictEqual(expected);
 });
+
+test('Strips twitter special characters from the start of concept names', () => {
+    expect(scraper.replaceTwitterCharacterInName('@dog')).toStrictEqual('dog');
+    expect(scraper.replaceTwitterCharacterInName('#dog')).toStrictEqual('dog');
+    expect(scraper.replaceTwitterCharacterInName('dog')).toStrictEqual('dog');
+    expect(scraper.replaceTwitterCharacterInName('')).toStrictEqual('');
+});
